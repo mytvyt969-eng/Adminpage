@@ -1,0 +1,9 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.PrayerScheduleTV" parent="android:style/Theme.Material.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:colorAccent">#F5A623</item>
+        <item name="android:navigationBarColor">#0A1211</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>

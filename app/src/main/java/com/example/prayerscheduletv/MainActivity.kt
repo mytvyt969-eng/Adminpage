@@ -361,14 +361,28 @@ private fun TimeEditor(
         focusUp = up,
         enabled = enabled,
         onCenter = { editing = !editing },
-        onUp = { onChange(if (editing) time.addMinutes(1) else time) },
-        onDown = { onChange(if (editing) time.addMinutes(-1) else time) },
-        onLeft = { onChange(if (editing) time.addHours(-1) else time) },
-        onRight = { onChange(if (editing) time.addHours(1) else time) }
+        // UP/DOWN always adjust the selected time. This keeps editing discoverable
+        // on a TV remote without requiring CENTER first.
+        onUp = { onChange(time.addMinutes(1)) },
+        onDown = { onChange(time.addMinutes(-1)) },
+        onLeft = { onChange(time.addHours(-1)) },
+        onRight = { onChange(time.addHours(1)) }
     ) {
-        Row(Modifier.fillMaxWidth().padding(horizontal = 10.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text(time.text(), color = if (enabled) PrimaryText else SecondaryText, fontSize = 18.sp, modifier = Modifier.weight(1f))
-            Text(if (editing) "▲▼" else "OK", color = Amber, fontSize = 11.sp)
+        Row(
+            Modifier.fillMaxWidth().padding(horizontal = 10.dp, vertical = 6.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                time.text(),
+                color = if (enabled) PrimaryText else SecondaryText,
+                fontSize = 18.sp,
+                modifier = Modifier.weight(1f)
+            )
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text("▲", color = AmberBright, fontSize = 12.sp)
+                Text(if (editing) "EDIT" else "OK", color = Amber, fontSize = 8.sp)
+                Text("▼", color = AmberBright, fontSize = 12.sp)
+            }
         }
     }
 }

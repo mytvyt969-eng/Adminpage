@@ -6,7 +6,6 @@ import android.view.KeyEvent
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
@@ -32,20 +31,17 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.unit.dp
@@ -226,7 +222,7 @@ fun PrayerScheduleScreen(vm: ScheduleViewModel) {
                 itemsIndexed(state.prayers) { index, prayer ->
                     PrayerCard(
                         prayer = prayer,
-                        modifier = Modifier.fillParentMaxHeight().width(270.dp),
+                        modifier = Modifier.fillMaxHeight().width(270.dp),
                         firstRequester = if (index == 0) firstRequester else null,
                         saveRequester = if (index == 0) saveRequester else null,
                         onAthan = { vm.updatePrayerAthan(index, it) },

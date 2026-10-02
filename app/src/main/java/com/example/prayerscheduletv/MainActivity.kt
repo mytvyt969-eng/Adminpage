@@ -42,7 +42,6 @@ import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -325,8 +324,8 @@ private fun CountdownCard(s: ScheduleState, vm: ScheduleViewModel, modifier: Mod
     Card(modifier.fillMaxHeight(), colors = CardDefaults.cardColors(containerColor = CardBg), shape = RoundedCornerShape(14.dp)) {
         Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Text("COUNTDOWN", color = AmberBright, fontSize = 19.sp)
-            Label("BEFORE ATHAN"); Stepper(s.beforeAthan, 0..60, { vm.update { it.copy(beforeAthan = it) } }, Modifier.fillMaxWidth(), "m")
-            Label("BEFORE JAMA'AT"); Stepper(s.beforeJamaat, 0..60, { vm.update { it.copy(beforeJamaat = it) } }, Modifier.fillMaxWidth(), "m")
+            Label("BEFORE ATHAN"); Stepper(s.beforeAthan, 0..60, { v -> vm.update { it.copy(beforeAthan = v) } }, Modifier.fillMaxWidth(), "m")
+            Label("BEFORE JAMA'AT"); Stepper(s.beforeJamaat, 0..60, { v -> vm.update { it.copy(beforeJamaat = v) } }, Modifier.fillMaxWidth(), "m")
         }
     }
 }
@@ -417,7 +416,7 @@ private fun FocusField(
             .focusProperties { if (focusUp != null) up = focusUp }
             .focusable(enabled)
             .onPreviewKeyEvent { e ->
-                if (e.type != KeyEventType.KeyDown) return@onPreviewKeyEvent false
+                if (e.nativeKeyEvent.action != KeyEvent.ACTION_DOWN) return@onPreviewKeyEvent false
                 when (e.nativeKeyEvent.keyCode) {
                     KeyEvent.KEYCODE_DPAD_UP -> { onUp(); true }
                     KeyEvent.KEYCODE_DPAD_DOWN -> { onDown(); true }

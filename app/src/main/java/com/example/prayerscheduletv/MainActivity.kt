@@ -293,27 +293,23 @@ private fun JummahCard(s: ScheduleState, vm: ScheduleViewModel, modifier: Modifi
     Card(modifier.fillMaxHeight(), colors = CardDefaults.cardColors(containerColor = CardBg), shape = RoundedCornerShape(14.dp)) {
         Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(7.dp)) {
             Text("JUMU'AH", color = AmberBright, fontSize = 19.sp)
-            Label("ATHAN"); TimeEditor(s.jummahAthan, { vm.update { it.copy(jummahAthan = it2(s, it, it)) } }, null, null)
+            Label("ATHAN"); TimeEditor(s.jummahAthan, { t -> vm.update { it.copy(jummahAthan = t, jummahJamaat = t.addMinutes(it.jummahOffset)) } }, null, null)
             Label("ATHAN OFFSET"); Stepper(s.jummahOffset, -60..180, { v -> vm.update { it.copy(jummahOffset = v, jummahJamaat = it.jummahAthan.addMinutes(v)) } }, Modifier.fillMaxWidth(), "m")
             Label("JAMA'AT"); TimeEditor(s.jummahJamaat, { t -> vm.update { it.copy(jummahJamaat = t) } }, null, null)
         }
     }
 }
-private fun it2(s: ScheduleState, x: ScheduleState, ignored: TvTime) = x.jummahAthan
-
 @Composable
 private fun SpecialCard(s: ScheduleState, vm: ScheduleViewModel, modifier: Modifier) {
     Card(modifier.fillMaxHeight(), colors = CardDefaults.cardColors(containerColor = CardBg), shape = RoundedCornerShape(14.dp)) {
         Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             Text("SPECIAL SALAH", color = AmberBright, fontSize = 19.sp)
-            ToggleTime("Eid", s.eidEnabled, s.eid, { vm.update { it.copy(eidEnabled = !it.eidEnabled) } }, { vm.update { it.copy(eid = it2(it, it, it.eid)) } })
-            ToggleTime("Eid-ul-Adha", s.eidAdhaEnabled, s.eidAdha, { vm.update { it.copy(eidAdhaEnabled = !it.eidAdhaEnabled) } }, { vm.update { it.copy(eidAdha = it.eidAdha) } })
-            ToggleTime("Taraweeh", s.taraweehEnabled, s.taraweeh, { vm.update { it.copy(taraweehEnabled = !it.taraweehEnabled) } }, { vm.update { it.copy(taraweeh = it.taraweeh.addMinutes(1)) } })
+            ToggleTime("Eid", s.eidEnabled, s.eid, { vm.update { it.copy(eidEnabled = !it.eidEnabled) } }, { t -> vm.update { it.copy(eid = t) } })
+            ToggleTime("Eid-ul-Adha", s.eidAdhaEnabled, s.eidAdha, { vm.update { it.copy(eidAdhaEnabled = !it.eidAdhaEnabled) } }, { t -> vm.update { it.copy(eidAdha = t) } })
+            ToggleTime("Taraweeh", s.taraweehEnabled, s.taraweeh, { vm.update { it.copy(taraweehEnabled = !it.taraweehEnabled) } }, { t -> vm.update { it.copy(taraweeh = t) } })
         }
     }
 }
-private fun it2(s: ScheduleState, x: ScheduleState, t: TvTime) = t
-
 @Composable
 private fun RamzanCard(s: ScheduleState, vm: ScheduleViewModel, modifier: Modifier) {
     Card(modifier.fillMaxHeight(), colors = CardDefaults.cardColors(containerColor = CardBg), shape = RoundedCornerShape(14.dp)) {
@@ -352,12 +348,11 @@ private fun SystemCard(saved: Boolean, modifier: Modifier) {
 }
 
 @Composable
-private fun ToggleTime(label: String, checked: Boolean, time: TvTime, onToggle: () -> Unit, onTime: () -> Unit) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Text(label, color = PrimaryText, fontSize = 12.sp, modifier = Modifier.weight(1f))
+private fun ToggleTime(label: String, checked: Boolean, time: TvTime, onToggle: () -> Unit, onTime: (TvTime) -> Unit) {
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+        Text(label, color = PrimaryText, fontSize = 11.sp, modifier = Modifier.weight(1f))
         Switch(checked = checked, onCheckedChange = { onToggle() })
-        Spacer(Modifier.width(4.dp))
-        Text(time.text(), color = if (checked) PrimaryText else SecondaryText, fontSize = 12.sp)
+        TimeEditor(time, onTime, null, null, enabled = checked)
     }
 }
 
